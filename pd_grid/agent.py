@@ -1,5 +1,6 @@
 import mesa
 
+ENERGY = 2
 
 class PDAgent(mesa.Agent):
     """Agent member of the iterated, spatial prisoner's dilemma model."""
@@ -17,6 +18,7 @@ class PDAgent(mesa.Agent):
         super().__init__(pos, model)
         self.pos = pos
         self.score = 0
+        self.alive = True
         if starting_move:
             self.move = starting_move
         else:
@@ -24,8 +26,12 @@ class PDAgent(mesa.Agent):
         self.next_move = None
 
     @property
-    def isCooroperating(self):
+    def isCooperating(self):
         return self.move == "C"
+    
+    @property
+    def isAlive(self):
+        return self.alive
 
     def step(self):
         """Get the best neighbor's move, and change own move accordingly if better than own score."""
@@ -38,7 +44,12 @@ class PDAgent(mesa.Agent):
 
     def advance(self):
         self.move = self.next_move
-        self.score += self.increment_score()
+        self.score += (self.increment_score() - ENERGY)
+        print(self.score)
+        if self.score < 0:
+            self.alive = False
+        else:
+            self.alive = True
 
     def increment_score(self):
         neighbors = self.model.grid.get_neighbors(self.pos, True)

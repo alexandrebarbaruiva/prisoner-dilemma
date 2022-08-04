@@ -15,6 +15,34 @@ model_params = {
         value="Random",
         choices=list(PdGrid.schedule_types.keys()),
     ),
+    "cooperation_reward": mesa.visualization.Slider(
+        name="Cooperation Reward",
+        value=1,
+        min_value=-5,
+        max_value=5,
+        description="Cooperation Reward",
+    ),
+    "defected_reward": mesa.visualization.Slider(
+        name="Defected Reward",
+        value=1,
+        min_value=-5,
+        max_value=5,
+        description="Defected Reward",
+    ),
+    "defection_reward": mesa.visualization.Slider(
+        name="Defection Reward",
+        value=1,
+        min_value=-5,
+        max_value=5,
+        description="Defection Reward",
+    ),
+    "mutual_defection_reward": mesa.visualization.Slider(
+        name="Mutual Defection Reward",
+        value=1,
+        min_value=-5,
+        max_value=5,
+        description="Mutual Defection Reward",
+    ),
 }
 
 server = mesa.visualization.ModularServer(

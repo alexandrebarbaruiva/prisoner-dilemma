@@ -7,6 +7,8 @@ def portrayPDAgent(agent):
     """
     if agent is None:
         raise AssertionError
+    color = "blue" if agent.isCooperating else "red"
+    color = color if agent.isAlive else "white"
     return {
         "Shape": "rect",
         "w": 1,
@@ -15,5 +17,5 @@ def portrayPDAgent(agent):
         "Layer": 0,
         "x": agent.pos[0],
         "y": agent.pos[1],
-        "Color": "blue" if agent.isCooroperating else "red",
+        "Color": color,
     }
