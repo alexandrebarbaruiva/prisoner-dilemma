@@ -45,6 +45,22 @@ model_params = {
     ),
 }
 
+chart = mesa.visualization.ChartModule(
+    [
+        {"Label": "Cooperating", "Color": "blue"},
+        {"Label": "Defecting", "Color": "red"},
+    ]
+)
+
+proportion_chart = mesa.visualization.ChartModule(
+    [
+        {"Label": "Proportion", "Color": "green"},
+    ]
+)
+
 server = mesa.visualization.ModularServer(
-    PdGrid, [canvas_element], "Prisoner's Dilemma", model_params
+    PdGrid,
+    [canvas_element, chart, proportion_chart],
+    "Prisoner's Dilemma",
+    model_params,
 )
