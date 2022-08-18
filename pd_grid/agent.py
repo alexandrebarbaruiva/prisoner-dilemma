@@ -44,8 +44,7 @@ class PDAgent(mesa.Agent):
 
     def advance(self):
         self.move = self.next_move
-        self.score += (self.increment_score() - ENERGY)
-        print(self.score)
+        self.score += (self.increment_score())
         if self.score < 0:
             self.alive = False
         else:
@@ -57,4 +56,4 @@ class PDAgent(mesa.Agent):
             moves = [neighbor.next_move for neighbor in neighbors]
         else:
             moves = [neighbor.move for neighbor in neighbors]
-        return sum(self.model.payoff[(self.move, move)] for move in moves)
+        return sum(self.model.payoff[(self.move, move)] for move in moves)/8

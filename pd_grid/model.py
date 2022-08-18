@@ -100,7 +100,7 @@ class PdGrid(mesa.Model):
         # collect data
         self.datacollector.collect(self)
         proportion = get_proportion(self)
-        if proportion == 0 or proportion == 1:
+        if proportion == 0 or proportion == 1 or self.step == 100:
             self.running = False
 
     def run(self, n):
