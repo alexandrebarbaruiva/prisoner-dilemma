@@ -4,13 +4,26 @@ from .agent import PDAgent
 
 
 def get_proportion(model):
-    defecting = get_num_defecting(model)
-    if defecting == 0:
-        return 100
     cooperating = get_num_cooperating(model)
     alive = get_num_alive(model)
-    return (cooperating - defecting) / alive
+    alive = alive if alive > 0 else 1
+    return ((cooperating) / alive) * 100
 
+
+def get_altruism(model):
+    altruists = 0
+    for agent in model.schedule.agents:
+        if agent.isCooperating and agent.isAlive:
+            altruists += agent.friendlyNeighbors / 2
+    return altruists
+
+def get_model_score(model):
+    total_score = 0
+    total_agents = len(model.schedule.agents)
+    total_agents = 2 * total_agents if total_agents != 0 else 1
+    for agent in model.schedule.agents:
+        total_score += agent.score
+    return total_score / total_agents
 
 def get_num_alive(model):
     alive = 0
@@ -68,6 +81,8 @@ class PdGrid(mesa.Model):
                            Determines the agent activation regime.
             payoffs: (optional) Dictionary of (move, neighbor_move) payoffs.
         """
+        self.score = 0
+        self.current_step = 0
         self.payoff = {
             ("C", "C"): cooperation_reward,
             ("C", "D"): defected_reward,
@@ -86,9 +101,11 @@ class PdGrid(mesa.Model):
                 self.schedule.add(agent)
         self.datacollector = mesa.DataCollector(
             model_reporters={
+                "Is Alive": get_num_alive,
                 "Cooperating": get_num_cooperating,
                 "Defecting": get_num_defecting,
                 "Proportion": get_proportion,
+                "Altruism": get_altruism,
             },
         )
 
@@ -96,12 +113,14 @@ class PdGrid(mesa.Model):
         self.datacollector.collect(self)
 
     def step(self):
+        self.current_step += 1
+        self.score = get_model_score(self)
         self.schedule.step()
         # collect data
         self.datacollector.collect(self)
         proportion = get_proportion(self)
-        if proportion == 0 or proportion == 1 or self.step == 100:
-            self.running = False
+        # if proportion == 0 or proportion == 1 or self.step == 100:
+        #     self.running = False
 
     def run(self, n):
         """Run the model for n steps."""
